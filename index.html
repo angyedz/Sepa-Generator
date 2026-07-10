@@ -49,6 +49,9 @@
                     <button class="tab-btn" id="tab-validator" aria-selected="false" role="tab">
                         <i class="fa-solid fa-clipboard-check"></i> Валидатор
                     </button>
+                    <button class="tab-btn" id="tab-address" aria-selected="false" role="tab">
+                        <i class="fa-solid fa-map-location-dot"></i> Адреса
+                    </button>
                 </nav>
 
                 <!-- TAB CONTENT 1: GENERATOR CONTROLS -->
@@ -167,6 +170,98 @@
                                     <span class="detail-value" id="val-bank-address">-</span>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB CONTENT 3: ADDRESS GENERATOR -->
+                <div class="tab-content hidden-field" id="content-address" role="tabpanel">
+                    <div class="control-card">
+                        <h2 class="card-title"><i class="fa-solid fa-map-location-dot"></i> Генератор адресов</h2>
+                        
+                        <div class="form-group">
+                            <label for="address-country-select">Страна адреса</label>
+                            <div class="select-wrapper">
+                                <select id="address-country-select">
+                                    <option value="DE" selected>Германия (Germany)</option>
+                                    <option value="FR">Франция (France)</option>
+                                    <option value="ES">Испания (Spain)</option>
+                                    <option value="IT">Италия (Italy)</option>
+                                    <option value="NL">Нидерланды (Netherlands)</option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down select-arrow"></i>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-primary" id="btn-generate-address">
+                            <i class="fa-solid fa-map-pin"></i> Сгенерировать адрес
+                        </button>
+
+                        <!-- Address output fields -->
+                        <div class="address-result-card hidden-field" id="address-result-container">
+                            <div class="form-group">
+                                <label for="addr-fullname">Full name</label>
+                                <div class="input-with-action">
+                                    <input type="text" id="addr-fullname" readonly>
+                                    <button type="button" class="btn btn-secondary" onclick="copyAddressField('addr-fullname')" title="Копировать ФИО">
+                                        <i class="fa-solid fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="addr-country">Country or region</label>
+                                <div class="input-with-action">
+                                    <input type="text" id="addr-country" readonly>
+                                    <button type="button" class="btn btn-secondary" onclick="copyAddressField('addr-country')" title="Копировать страну">
+                                        <i class="fa-solid fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="addr-line1">Address line 1</label>
+                                <div class="input-with-action">
+                                    <input type="text" id="addr-line1" readonly>
+                                    <button type="button" class="btn btn-secondary" onclick="copyAddressField('addr-line1')" title="Копировать адрес 1">
+                                        <i class="fa-solid fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="addr-line2">Address line 2</label>
+                                <div class="input-with-action">
+                                    <input type="text" id="addr-line2" readonly placeholder="Apt., suite, unit number, etc. (optional)">
+                                    <button type="button" class="btn btn-secondary" onclick="copyAddressField('addr-line2')" title="Копировать адрес 2">
+                                        <i class="fa-solid fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="addr-postal">Postal code</label>
+                                <div class="input-with-action">
+                                    <input type="text" id="addr-postal" readonly>
+                                    <button type="button" class="btn btn-secondary" onclick="copyAddressField('addr-postal')" title="Копировать индекс">
+                                        <i class="fa-solid fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="addr-city">City</label>
+                                <div class="input-with-action">
+                                    <input type="text" id="addr-city" readonly>
+                                    <button type="button" class="btn btn-secondary" onclick="copyAddressField('addr-city')" title="Копировать город">
+                                        <i class="fa-solid fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-secondary" id="btn-copy-address-block" style="width: 100%; margin-top: 1rem; min-height: 48px;">
+                                <i class="fa-solid fa-copy"></i> Скопировать весь адрес
+                            </button>
                         </div>
                     </div>
                 </div>

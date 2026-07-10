@@ -540,13 +540,37 @@ select:focus {
 /* ==========================================================================
    MANUAL VALIDATOR RESULTS
    ========================================================================== */
-.validation-result-card {
+.validation-result-card,
+.address-result-card {
     margin-block-start: 1.5rem;
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     padding: 1.25rem;
     animation: slideDown var(--transition-normal);
+}
+
+.address-result-card .form-group {
+    margin-block-end: 0.85rem;
+}
+
+.address-result-card .form-group:last-of-type {
+    margin-block-end: 0;
+}
+
+.address-result-card label {
+    margin-block-end: 0.25rem;
+}
+
+.address-result-card input {
+    min-height: 38px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+}
+
+.address-result-card .input-with-action .btn {
+    min-height: 38px;
+    min-width: 38px;
 }
 
 .result-header {

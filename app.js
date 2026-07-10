@@ -8,6 +8,20 @@ const tabGenerator = document.getElementById('tab-generator');
 const tabValidator = document.getElementById('tab-validator');
 const contentGenerator = document.getElementById('content-generator');
 const contentValidator = document.getElementById('content-validator');
+const tabAddress = document.getElementById('tab-address');
+const contentAddress = document.getElementById('content-address');
+
+// Address Generator Elements
+const addressCountrySelect = document.getElementById('address-country-select');
+const btnGenerateAddress = document.getElementById('btn-generate-address');
+const addressResultContainer = document.getElementById('address-result-container');
+const addrFullname = document.getElementById('addr-fullname');
+const addrCountry = document.getElementById('addr-country');
+const addrLine1 = document.getElementById('addr-line1');
+const addrLine2 = document.getElementById('addr-line2');
+const addrPostal = document.getElementById('addr-postal');
+const addrCity = document.getElementById('addr-city');
+const btnCopyAddressBlock = document.getElementById('btn-copy-address-block');
 
 // Generator elements
 const generatorForm = document.getElementById('generator-form');
@@ -142,6 +156,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     exportTxtBtn.addEventListener('click', () => exportResults('txt'));
     exportJsonBtn.addEventListener('click', () => exportResults('json'));
+
+    // Address Generator events
+    tabAddress.addEventListener('click', () => switchTab('address'));
+    btnGenerateAddress.addEventListener('click', handleAddressGeneration);
+    btnCopyAddressBlock.addEventListener('click', copyFullAddressBlock);
 });
 
 // ===== TAB SYSTEM =====
@@ -151,22 +170,32 @@ function switchTab(tab) {
         return;
     }
 
+    // Reset active states for all tabs
+    tabGenerator.classList.remove('active');
+    tabGenerator.setAttribute('aria-selected', 'false');
+    tabValidator.classList.remove('active');
+    tabValidator.setAttribute('aria-selected', 'false');
+    tabAddress.classList.remove('active');
+    tabAddress.setAttribute('aria-selected', 'false');
+
+    // Hide all contents
+    contentGenerator.classList.add('hidden-field');
+    contentValidator.classList.add('hidden-field');
+    contentAddress.classList.add('hidden-field');
+
+    // Show selected
     if (tab === 'generator') {
         tabGenerator.classList.add('active');
         tabGenerator.setAttribute('aria-selected', 'true');
-        tabValidator.classList.remove('active');
-        tabValidator.setAttribute('aria-selected', 'false');
-        
         contentGenerator.classList.remove('hidden-field');
-        contentValidator.classList.add('hidden-field');
-    } else {
+    } else if (tab === 'validator') {
         tabValidator.classList.add('active');
         tabValidator.setAttribute('aria-selected', 'true');
-        tabGenerator.classList.remove('active');
-        tabGenerator.setAttribute('aria-selected', 'false');
-        
         contentValidator.classList.remove('hidden-field');
-        contentGenerator.classList.add('hidden-field');
+    } else if (tab === 'address') {
+        tabAddress.classList.add('active');
+        tabAddress.setAttribute('aria-selected', 'true');
+        contentAddress.classList.remove('hidden-field');
     }
 }
 
@@ -745,4 +774,150 @@ function showNotification(message, type = 'success') {
             notification.remove();
         }, 300);
     }, 3500);
+}
+
+// ===== ADDRESS GENERATOR LOGIC =====
+
+const addressData = {
+    DE: {
+        countryName: "Germany",
+        firstNames: ["Hans", "Dieter", "Klaus", "Michael", "Thomas", "Andreas", "Walter", "Jürgen", "Stefan", "Christian", "Sabine", "Petra", "Monika", "Ursula", "Renate", "Helga", "Karin", "Elisabeth", "Maria", "Jonas", "Leon", "Lucas", "Lina", "Emma", "Sofia", "Mia"],
+        lastNames: ["Müller", "Schmidt", "Schneider", "Fischer", "Weber", "Meyer", "Wagner", "Becker", "Schulz", "Hoffmann", "Schäfer", "Koch", "Bauer", "Richter", "Klein", "Schröder", "Neumann", "Schwarz", "Zimmermann", "Braun"],
+        streets: ["Hauptstraße", "Bahnhofstraße", "Schillerstraße", "Goethestraße", "Waldstraße", "Schulstraße", "Gartenstraße", "Lindenstraße", "Ringstraße", "Birkenweg", "Mühlenstraße", "Friedhofstraße", "Feldstraße"],
+        cities: [
+            { name: "Berlin", zips: ["10115", "10117", "10435", "10777", "10999"] },
+            { name: "München", zips: ["80331", "80333", "80634", "80801", "81675"] },
+            { name: "Hamburg", zips: ["20095", "20354", "22303", "22765", "22529"] },
+            { name: "Frankfurt am Main", zips: ["60311", "60313", "60325", "60486", "60594"] },
+            { name: "Köln", zips: ["50667", "50672", "50823", "50933", "51103"] }
+        ]
+    },
+    FR: {
+        countryName: "France",
+        firstNames: ["Jean", "Pierre", "Michel", "Philippe", "André", "Jacques", "François", "Louis", "Alain", "Marie", "Nathalie", "Isabelle", "Catherine", "Françoise", "Monique", "Martine", "Sylvie", "Valérie", "Lucas", "Hugo", "Enzo", "Léa", "Manon", "Chloé", "Emma"],
+        lastNames: ["Martin", "Bernard", "Thomas", "Petit", "Robert", "Richard", "Durand", "Dubois", "Moreau", "Laurent", "Simon", "Michel", "Garcia", "Lefebvre", "Leroy", "Roux", "David", "Bertrand", "Morel", "Fournier"],
+        streets: ["Rue de la Paix", "Rue de Rivoli", "Avenue des Champs-Élysées", "Rue Saint-Honoré", "Boulevard Saint-Germain", "Rue de la Gare", "Rue des Fleurs", "Avenue Victor Hugo", "Rue de Paris", "Boulevard de la République", "Rue de l'Église", "Avenue Jean Jaurès"],
+        cities: [
+            { name: "Paris", zips: ["75001", "75005", "75008", "75011", "75016"] },
+            { name: "Marseille", zips: ["13001", "13003", "13006", "13008", "13012"] },
+            { name: "Lyon", zips: ["69001", "69002", "69003", "69005", "69006"] },
+            { name: "Toulouse", zips: ["31000", "31100", "31200", "31300", "31400"] },
+            { name: "Nice", zips: ["06000", "06100", "06200", "06300"] }
+        ]
+    },
+    ES: {
+        countryName: "Spain",
+        firstNames: ["José", "Manuel", "Francisco", "Antonio", "Juan", "Carlos", "Luis", "Alejandro", "María", "Carmen", "Ana", "Isabel", "Dolores", "Pilar", "Teresa", "Josefa", "David", "Daniel", "Javier", "Sofía", "Lucía", "Martina", "Paula"],
+        lastNames: ["García", "Rodríguez", "González", "Fernández", "López", "Martínez", "Sánchez", "Pérez", "Gómez", "Martín", "Jiménez", "Ruiz", "Hernández", "Díaz", "Moreno", "Muñoz", "Álvarez", "Romero", "Alonso", "Gutiérrez"],
+        streets: ["Calle Mayor", "Gran Vía", "Calle de Alcalá", "Avenida de la Constitución", "Paseo de Gracia", "Calle de Santiago", "Calle Nueva", "Calle Real", "Calle de las Flores", "Avenida de Madrid", "Plaza de España"],
+        cities: [
+            { name: "Madrid", zips: ["28001", "28004", "28012", "28015", "28045"] },
+            { name: "Barcelona", zips: ["08001", "08003", "08007", "08012", "08018"] },
+            { name: "Valencia", zips: ["46001", "46003", "46005", "46010", "46020"] },
+            { name: "Sevilla", zips: ["41001", "41003", "41005", "41010", "41013"] },
+            { name: "Zaragoza", zips: ["50001", "50003", "50005", "50008", "50012"] }
+        ]
+    },
+    IT: {
+        countryName: "Italy",
+        firstNames: ["Giuseppe", "Giovanni", "Antonio", "Mario", "Luigi", "Francesco", "Roberto", "Alessandro", "Andrea", "Marco", "Maria", "Anna", "Giuseppina", "Rosa", "Angela", "Giovanna", "Francesca", "Matteo", "Lorenzo", "Giulia", "Sofia", "Aurora", "Alice"],
+        lastNames: ["Rossi", "Russo", "Ferrari", "Esposito", "Bianchi", "Romano", "Colombo", "Ricci", "Marino", "Greco", "Bruno", "Gallo", "Conti", "De Luca", "Costa", "Giordano", "Mancini", "Rizzo", "Lombardi", "Moretti"],
+        streets: ["Via Roma", "Corso Vittorio Emanuele", "Via Garibaldi", "Via Cavour", "Piazza Duomo", "Via Dante", "Via Marconi", "Via Mazzini", "Via dei Mille", "Via Verdi", "Viale Regina Margherita"],
+        cities: [
+            { name: "Roma", zips: ["00184", "00185", "00187", "00192", "00199"] },
+            { name: "Milano", zips: ["20121", "20123", "20129", "20145", "20154"] },
+            { name: "Napoli", zips: ["80131", "80133", "80135", "80138", "80147"] },
+            { name: "Torino", zips: ["10121", "10123", "10126", "10141", "10152"] },
+            { name: "Firenze", zips: ["50121", "50123", "50125", "50129", "50136"] }
+        ]
+    },
+    NL: {
+        countryName: "Netherlands",
+        firstNames: ["Johannes", "Jan", "Cornelis", "Willem", "Hendrik", "Gerrit", "Pieter", "Jacob", "Dirk", "Thomas", "Maria", "Johanna", "Cornelia", "Anna", "Elisabeth", "Catharina", "Jacoba", "Hendrika", "Daan", "Sem", "Luuk", "Emma", "Tess", "Sophie", "Julia"],
+        lastNames: ["de Jong", "de Vries", "Jansen", "van de Berg", "Bakker", "van Dijk", "Visser", "Janssen", "Smit", "Meijer", "de Graaf", "Bos", "Dekker", "Kok", "Mulder", "de Haan", "Peters", "Hendriks"],
+        streets: ["Hoogstraat", "Kerkstraat", "Molenstraat", "Dorpsstraat", "Stationsstraat", "Nieuwstraat", "Schoolstraat", "Markt", "Julianastraat", "Wilhelminastraat", "Singel", "Prinsengracht"],
+        cities: [
+            { name: "Amsterdam", zips: ["1012 JS", "1016 CR", "1017 XP", "1054 VM", "1071 ZH"] },
+            { name: "Rotterdam", zips: ["3011 WX", "3012 CL", "3033 AM", "3071 AC", "3082 BG"] },
+            { name: "Den Haag", zips: ["2511 CR", "2513 AA", "2518 TR", "2525 KH", "2596 AL"] },
+            { name: "Utrecht", zips: ["3511 AD", "3512 JE", "3521 AH", "3572 LA", "3581 CA"] },
+            { name: "Eindhoven", zips: ["5611 EM", "5612 AP", "5615 GL", "5621 BA", "5644 AD"] }
+        ]
+    }
+};
+
+function getRandomElement(arr) {
+    if (!arr || arr.length === 0) return "";
+    const index = Math.floor(Math.random() * arr.length);
+    return arr[index];
+}
+
+function handleAddressGeneration() {
+    const country = addressCountrySelect.value;
+    const data = addressData[country];
+    if (!data) return;
+
+    const firstName = getRandomElement(data.firstNames);
+    const lastName = getRandomElement(data.lastNames);
+    const fullName = `${firstName} ${lastName}`;
+
+    const street = getRandomElement(data.streets);
+    const houseNumber = Math.floor(Math.random() * 180) + 1;
+    const streetAddress = `${street} ${houseNumber}`;
+
+    // Optional Address Line 2 (30% chance)
+    let addressLine2 = "";
+    if (Math.random() < 0.3) {
+        const randType = Math.random();
+        if (randType < 0.5) {
+            addressLine2 = `Apt. ${Math.floor(Math.random() * 80) + 1}`;
+        } else {
+            addressLine2 = `Fl. ${Math.floor(Math.random() * 8) + 1}, Door ${Math.floor(Math.random() * 4) + 1}`;
+        }
+    }
+
+    const cityObj = getRandomElement(data.cities);
+    const zip = getRandomElement(cityObj.zips);
+
+    // Fill in the UI
+    addrFullname.value = fullName;
+    addrCountry.value = data.countryName;
+    addrLine1.value = streetAddress;
+    addrLine2.value = addressLine2;
+    addrPostal.value = zip;
+    addrCity.value = cityObj.name;
+
+    // Show container
+    addressResultContainer.classList.remove('hidden-field');
+    showNotification('Адрес успешно сгенерирован!', 'success');
+}
+
+window.copyAddressField = function(fieldId) {
+    const input = document.getElementById(fieldId);
+    if (!input || !input.value) return;
+    
+    navigator.clipboard.writeText(input.value)
+        .then(() => showNotification('Поле скопировано в буфер обмена', 'success'))
+        .catch(() => showNotification('Не удалось скопировать', 'error'));
+};
+
+function copyFullAddressBlock() {
+    const name = addrFullname.value;
+    const country = addrCountry.value;
+    const line1 = addrLine1.value;
+    const line2 = addrLine2.value;
+    const postal = addrPostal.value;
+    const city = addrCity.value;
+
+    if (!name) return;
+
+    let block = `${name}\n${line1}\n`;
+    if (line2) {
+        block += `${line2}\n`;
+    }
+    block += `${postal} ${city}\n${country}`;
+
+    navigator.clipboard.writeText(block)
+        .then(() => showNotification('Полный адрес скопирован в буфер обмена', 'success'))
+        .catch(() => showNotification('Не удалось скопировать', 'error'));
 }
