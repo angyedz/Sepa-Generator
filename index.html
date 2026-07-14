@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Усовершенствованный генератор и валидатор SEPA IBAN. Офлайн генерация и онлайн проверка в реальном времени. Полностью клиентское веб-приложение.">
+    <meta name="description" content="Усовершенствованный генератор и валидатор SEPA IBAN. Офлайн генерация и онлайн проверка в [...]
     <title>SEPA IBAN Generator & Validator</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,6 +18,20 @@
     <!-- Background glows for modern aesthetic -->
     <div class="glow-bg-1" aria-hidden="true"></div>
     <div class="glow-bg-2" aria-hidden="true"></div>
+
+    <!-- Modal Window -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close-btn" aria-label="Закрыть">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="modal-body">
+                <h2 class="modal-title">Заходи в мой тгк</h2>
+                <p class="modal-url"><a href="https://t.me/logovo_ai" target="_blank" rel="noopener noreferrer">t.me/logovo_ai</a></p>
+                <p class="modal-subtitle">тут рассказываю про абузы ИИ и упрощаю его использование</p>
+            </div>
+        </div>
+    </div>
 
     <div class="container">
         <!-- HEADER -->
@@ -318,7 +332,7 @@
                     <div class="results-list-wrapper">
                         <div class="empty-state" id="empty-state-message">
                             <div class="empty-icon"><i class="fa-solid fa-box-open"></i></div>
-                            <p>Список пуст. Выберите параметры и нажмите кнопку "Запустить генерацию" или воспользуйтесь валидатором.</p>
+                            <p>Список пуст. Выберите параметры и нажмите кнопку "Запустить генерацию" или воспользуйтес…</p>
                         </div>
                         <ul class="results-list" id="results-list-element" aria-live="polite">
                             <!-- Dynamically generated list items go here -->
@@ -331,7 +345,7 @@
         <!-- FOOTER -->
         <footer class="app-footer">
             <p>Логика генерации карт от Bebrus, переписано на JS от angyedz.</p>
-            <p>Проверка производится локально по алгоритму MOD-97 и через свободный API <a href="https://openiban.com" target="_blank" rel="noopener noreferrer">openiban.com</a>.</p>
+            <p>Проверка производится локально по алгоритму MOD-97 и через свободный API <a href="https://openiban.com" target="_blank" rel="n…">openiban.com</a></p>
         </footer>
     </div>
 
