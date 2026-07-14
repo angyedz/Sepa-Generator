@@ -11,6 +11,10 @@ const contentValidator = document.getElementById('content-validator');
 const tabAddress = document.getElementById('tab-address');
 const contentAddress = document.getElementById('content-address');
 
+// Modal Elements
+const modalOverlay = document.getElementById('modal-overlay');
+const modalCloseBtn = document.getElementById('modal-close-btn');
+
 // Address Generator Elements
 const addressCountrySelect = document.getElementById('address-country-select');
 const btnGenerateAddress = document.getElementById('btn-generate-address');
@@ -91,8 +95,39 @@ const countryDefaults = {
     custom: { bankCode: '', accLength: 10, hint: 'Пользовательский формат' }
 };
 
+// ===== MODAL MANAGEMENT =====
+function closeModal() {
+    modalOverlay.classList.add('hidden-field');
+}
+
+function initializeModal() {
+    // Check if modal was already shown today
+    const modalShown = localStorage.getItem('modalShownToday');
+    const today = new Date().toDateString();
+    
+    if (modalShown !== today) {
+        modalOverlay.classList.remove('hidden-field');
+        localStorage.setItem('modalShownToday', today);
+    } else {
+        modalOverlay.classList.add('hidden-field');
+    }
+}
+
 // ===== INITIALIZATION & EVENTS =====
 document.addEventListener('DOMContentLoaded', () => {
+    // Show modal on page load
+    initializeModal();
+    
+    // Close modal on button click
+    modalCloseBtn.addEventListener('click', closeModal);
+    
+    // Close modal on overlay click (outside the modal)
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+            closeModal();
+        }
+    });
+    
     // Check API Status initially
     checkApiStatus();
 
@@ -781,9 +816,9 @@ function showNotification(message, type = 'success') {
 const addressData = {
     DE: {
         countryName: "Germany",
-        firstNames: ["Hans", "Dieter", "Klaus", "Michael", "Thomas", "Andreas", "Walter", "Jürgen", "Stefan", "Christian", "Sabine", "Petra", "Monika", "Ursula", "Renate", "Helga", "Karin", "Elisabeth", "Maria", "Jonas", "Leon", "Lucas", "Lina", "Emma", "Sofia", "Mia"],
-        lastNames: ["Müller", "Schmidt", "Schneider", "Fischer", "Weber", "Meyer", "Wagner", "Becker", "Schulz", "Hoffmann", "Schäfer", "Koch", "Bauer", "Richter", "Klein", "Schröder", "Neumann", "Schwarz", "Zimmermann", "Braun"],
-        streets: ["Hauptstraße", "Bahnhofstraße", "Schillerstraße", "Goethestraße", "Waldstraße", "Schulstraße", "Gartenstraße", "Lindenstraße", "Ringstraße", "Birkenweg", "Mühlenstraße", "Friedhofstraße", "Feldstraße"],
+        firstNames: ["Hans", "Dieter", "Klaus", "Michael", "Thomas", "Andreas", "Walter", "Jürgen", "Stefan", "Christian", "Sabine", "Petra", "Monika", "Ursula", "Renate", "Helga", "Karin", "Elisabeth"],
+        lastNames: ["Müller", "Schmidt", "Schneider", "Fischer", "Weber", "Meyer", "Wagner", "Becker", "Schulz", "Hoffmann", "Schäfer", "Koch", "Bauer", "Richter", "Klein", "Schröder", "Neumann", "Schwarz"],
+        streets: ["Hauptstraße", "Bahnhofstraße", "Schillerstraße", "Goethestraße", "Waldstraße", "Schulstraße", "Gartenstraße", "Lindenstraße", "Ringstraße", "Birkenweg", "Mühlenstraße"],
         cities: [
             { name: "Berlin", zips: ["10115", "10117", "10435", "10777", "10999"] },
             { name: "München", zips: ["80331", "80333", "80634", "80801", "81675"] },
@@ -794,9 +829,9 @@ const addressData = {
     },
     FR: {
         countryName: "France",
-        firstNames: ["Jean", "Pierre", "Michel", "Philippe", "André", "Jacques", "François", "Louis", "Alain", "Marie", "Nathalie", "Isabelle", "Catherine", "Françoise", "Monique", "Martine", "Sylvie", "Valérie", "Lucas", "Hugo", "Enzo", "Léa", "Manon", "Chloé", "Emma"],
-        lastNames: ["Martin", "Bernard", "Thomas", "Petit", "Robert", "Richard", "Durand", "Dubois", "Moreau", "Laurent", "Simon", "Michel", "Garcia", "Lefebvre", "Leroy", "Roux", "David", "Bertrand", "Morel", "Fournier"],
-        streets: ["Rue de la Paix", "Rue de Rivoli", "Avenue des Champs-Élysées", "Rue Saint-Honoré", "Boulevard Saint-Germain", "Rue de la Gare", "Rue des Fleurs", "Avenue Victor Hugo", "Rue de Paris", "Boulevard de la République", "Rue de l'Église", "Avenue Jean Jaurès"],
+        firstNames: ["Jean", "Pierre", "Michel", "Philippe", "André", "Jacques", "François", "Louis", "Alain", "Marie", "Nathalie", "Isabelle", "Catherine", "Françoise", "Monique", "Martine", "Nicole"],
+        lastNames: ["Martin", "Bernard", "Thomas", "Petit", "Robert", "Richard", "Durand", "Dubois", "Moreau", "Laurent", "Simon", "Michel", "Garcia", "Lefebvre", "Leroy", "Roux", "David"],
+        streets: ["Rue de la Paix", "Rue de Rivoli", "Avenue des Champs-Élysées", "Rue Saint-Honoré", "Boulevard Saint-Germain", "Rue de la Gare", "Rue des Fleurs", "Avenue Victor Hugo"],
         cities: [
             { name: "Paris", zips: ["75001", "75005", "75008", "75011", "75016"] },
             { name: "Marseille", zips: ["13001", "13003", "13006", "13008", "13012"] },
@@ -807,9 +842,9 @@ const addressData = {
     },
     ES: {
         countryName: "Spain",
-        firstNames: ["José", "Manuel", "Francisco", "Antonio", "Juan", "Carlos", "Luis", "Alejandro", "María", "Carmen", "Ana", "Isabel", "Dolores", "Pilar", "Teresa", "Josefa", "David", "Daniel", "Javier", "Sofía", "Lucía", "Martina", "Paula"],
-        lastNames: ["García", "Rodríguez", "González", "Fernández", "López", "Martínez", "Sánchez", "Pérez", "Gómez", "Martín", "Jiménez", "Ruiz", "Hernández", "Díaz", "Moreno", "Muñoz", "Álvarez", "Romero", "Alonso", "Gutiérrez"],
-        streets: ["Calle Mayor", "Gran Vía", "Calle de Alcalá", "Avenida de la Constitución", "Paseo de Gracia", "Calle de Santiago", "Calle Nueva", "Calle Real", "Calle de las Flores", "Avenida de Madrid", "Plaza de España"],
+        firstNames: ["José", "Manuel", "Francisco", "Antonio", "Juan", "Carlos", "Luis", "Alejandro", "María", "Carmen", "Ana", "Isabel", "Dolores", "Pilar", "Teresa", "Josefa", "David"],
+        lastNames: ["García", "Rodríguez", "González", "Fernández", "López", "Martínez", "Sánchez", "Pérez", "Gómez", "Martín", "Jiménez", "Ruiz", "Hernández", "Díaz", "Moreno"],
+        streets: ["Calle Mayor", "Gran Vía", "Calle de Alcalá", "Avenida de la Constitución", "Paseo de Gracia", "Calle de Santiago", "Calle Nueva", "Calle Real"],
         cities: [
             { name: "Madrid", zips: ["28001", "28004", "28012", "28015", "28045"] },
             { name: "Barcelona", zips: ["08001", "08003", "08007", "08012", "08018"] },
@@ -820,9 +855,9 @@ const addressData = {
     },
     IT: {
         countryName: "Italy",
-        firstNames: ["Giuseppe", "Giovanni", "Antonio", "Mario", "Luigi", "Francesco", "Roberto", "Alessandro", "Andrea", "Marco", "Maria", "Anna", "Giuseppina", "Rosa", "Angela", "Giovanna", "Francesca", "Matteo", "Lorenzo", "Giulia", "Sofia", "Aurora", "Alice"],
-        lastNames: ["Rossi", "Russo", "Ferrari", "Esposito", "Bianchi", "Romano", "Colombo", "Ricci", "Marino", "Greco", "Bruno", "Gallo", "Conti", "De Luca", "Costa", "Giordano", "Mancini", "Rizzo", "Lombardi", "Moretti"],
-        streets: ["Via Roma", "Corso Vittorio Emanuele", "Via Garibaldi", "Via Cavour", "Piazza Duomo", "Via Dante", "Via Marconi", "Via Mazzini", "Via dei Mille", "Via Verdi", "Viale Regina Margherita"],
+        firstNames: ["Giuseppe", "Giovanni", "Antonio", "Mario", "Luigi", "Francesco", "Roberto", "Alessandro", "Andrea", "Marco", "Maria", "Anna", "Giuseppina", "Rosa", "Angela"],
+        lastNames: ["Rossi", "Russo", "Ferrari", "Esposito", "Bianchi", "Romano", "Colombo", "Ricci", "Marino", "Greco", "Bruno", "Gallo", "Conti", "De Luca", "Costa"],
+        streets: ["Via Roma", "Corso Vittorio Emanuele", "Via Garibaldi", "Via Cavour", "Piazza Duomo", "Via Dante", "Via Marconi", "Via Mazzini"],
         cities: [
             { name: "Roma", zips: ["00184", "00185", "00187", "00192", "00199"] },
             { name: "Milano", zips: ["20121", "20123", "20129", "20145", "20154"] },
@@ -833,9 +868,9 @@ const addressData = {
     },
     NL: {
         countryName: "Netherlands",
-        firstNames: ["Johannes", "Jan", "Cornelis", "Willem", "Hendrik", "Gerrit", "Pieter", "Jacob", "Dirk", "Thomas", "Maria", "Johanna", "Cornelia", "Anna", "Elisabeth", "Catharina", "Jacoba", "Hendrika", "Daan", "Sem", "Luuk", "Emma", "Tess", "Sophie", "Julia"],
-        lastNames: ["de Jong", "de Vries", "Jansen", "van de Berg", "Bakker", "van Dijk", "Visser", "Janssen", "Smit", "Meijer", "de Graaf", "Bos", "Dekker", "Kok", "Mulder", "de Haan", "Peters", "Hendriks"],
-        streets: ["Hoogstraat", "Kerkstraat", "Molenstraat", "Dorpsstraat", "Stationsstraat", "Nieuwstraat", "Schoolstraat", "Markt", "Julianastraat", "Wilhelminastraat", "Singel", "Prinsengracht"],
+        firstNames: ["Johannes", "Jan", "Cornelis", "Willem", "Hendrik", "Gerrit", "Pieter", "Jacob", "Dirk", "Thomas", "Maria", "Johanna", "Cornelia", "Anna", "Elisabeth"],
+        lastNames: ["de Jong", "de Vries", "Jansen", "van de Berg", "Bakker", "van Dijk", "Visser", "Janssen", "Smit", "Meijer", "de Graaf", "Bos", "Dekker", "Kok"],
+        streets: ["Hoogstraat", "Kerkstraat", "Molenstraat", "Dorpsstraat", "Stationsstraat", "Nieuwstraat", "Schoolstraat", "Markt"],
         cities: [
             { name: "Amsterdam", zips: ["1012 JS", "1016 CR", "1017 XP", "1054 VM", "1071 ZH"] },
             { name: "Rotterdam", zips: ["3011 WX", "3012 CL", "3033 AM", "3071 AC", "3082 BG"] },
